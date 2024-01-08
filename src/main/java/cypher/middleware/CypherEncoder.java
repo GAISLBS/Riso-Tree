@@ -107,7 +107,7 @@ public class CypherEncoder {
    *
    * @param query_Graph
    * @param limit
-   * @param Explain_Or_Profile set to 1 if profile, -1 if Explain, otherwise 0
+   * @param explain_Or_Profile set to 1 if profile, -1 if Explain, otherwise 0
    * @return
    */
   public static String formCypherQuery(Query_Graph query_Graph, int limit,

@@ -44,11 +44,11 @@ public class ConstructRisoTreeTest {
             String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/containID.txt", dataset);
         break;
       case Windows:
-        String dataDirectory = "D:\\Ubuntu_shared\\GeoMinHop\\data";
+        String dataDirectory = "D:\\gspatial_test\\Riso-Tree\\data";
         db_path = String.format("%s\\%s\\%s_%s\\data\\databases\\graph.db", dataDirectory, dataset,
             version, dataset);
         containIDPath =
-            String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\containID.txt", dataset);
+            String.format("D:\\gspatial_test\\Riso-Tree\\data\\%s\\containID.txt", dataset);
       default:
         break;
     }
@@ -76,8 +76,8 @@ public class ConstructRisoTreeTest {
   @Test
   public void constructPNTimeContentCorrectnessTest() throws IOException {
     int countTest = 100;
-    String filePath1 = "D:\\Ubuntu_shared\\GeoMinHop\\data\\Gowalla_50\\PathNeighbors_2";
-    String filePath2 = "D:\\Ubuntu_shared\\GeoMinHop\\data\\Gowalla_50\\PathNeighbors_2_backup";
+    String filePath1 = "D:\\gspatial_test\\Riso-Tree\\data\\Gowalla_50\\PathNeighbors_2";
+    String filePath2 = "D:\\gspatial_test\\Riso-Tree\\data\\Gowalla_50\\PathNeighbors_2_backup";
 
     BufferedReader reader1 = new BufferedReader(new FileReader(new File(filePath1)));
     BufferedReader reader2 = new BufferedReader(new FileReader(new File(filePath2)));

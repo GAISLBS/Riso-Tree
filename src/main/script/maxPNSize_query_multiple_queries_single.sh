@@ -1,19 +1,21 @@
 #!/bin/bash
 ./package.sh
 
-dir="/hdd/code/yuhansun"
-result_dir="${dir}/result"
-maxPNSize_result_dir="${result_dir}/Riso-Tree/maxPNSizeRisoTreeQuery"
-code_dir="${dir}/code"
+dir="D:/gspatial_test/Riso-Tree"
+result_dir="${dir}/data/result"
+maxPNSize_result_dir="${result_dir}/maxPNSizeRisoTreeQuery"
+code_dir="${dir}"
 password="syhSYH.19910205"
 
 clear_cache="false"
 clear_cache_method="DOUBLE"
 
+java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+
 source ./utility.sh
 
-for dataset in "Yelp_100" "Gowalla_100" "foursquare_100" "wikidata"
-# for dataset in "foursquare_100"
+# for dataset in "Yelp_100" "Gowalla_100" "foursquare_100" "wikidata"
+for dataset in "smallGraph"
 do
 	data_dir="${dir}/data/${dataset}"
 	output_dir="${maxPNSize_result_dir}/${dataset}"
@@ -41,7 +43,7 @@ do
 	# label_path="${data_dir}/graph_label.txt"
 	# labelStrMapPath="${data_dir}/entity_string_label.txt"
 
-	query_dir="${dir}/result/query/${dataset}"
+	query_dir="${dir}/data/result/query/${dataset}"
 	node_count=2
 	query_count=50
 
@@ -56,14 +58,14 @@ do
 	for selectivity in $selectivity_list_str
 	do
 		query_path="${query_dir}/${node_count}_${selectivity}"
-		jar_path="${code_dir}/Riso-Tree/target/Riso-Tree-0.0.1-SNAPSHOT.jar"
+		jar_path="${code_dir}/target/Riso-Tree-0.0.1-SNAPSHOT.jar"
 
 		# split_mode="Gleenes"
 		# alpha="1.0"
 		# containID_suffix="${split_mode}_${alpha}_new_version"
 		# containID_path="${data_dir}/containID.txt"
 
-		java -Xmx100g -jar ${jar_path} \
+		${java_cmd} -Xmx100g -jar ${jar_path} \
 			-f maxPNSizeRisoTreeQueryMultiple \
 			-dp ${db_path} \
 			-d ${dataset} \

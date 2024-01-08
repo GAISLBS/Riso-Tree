@@ -9,13 +9,15 @@ function get_selectivity_list() {
 	fi
 }
 
-for dataset in "Yelp_100" "foursquare_100" "Gowalla_100" "wikidata"
-# for dataset in "Yelp_100"
+java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+
+# for dataset in "Yelp_100" "foursquare_100" "Gowalla_100" "wikidata"
+for dataset in "smallGraph"
 do
 	# server
-	dir="/hdd/code/yuhansun"
+	dir="D:/gspatial_test/Riso-Tree"
 	data_dir="${dir}/data/${dataset}"
-	code_dir="${dir}/code"
+	code_dir="${dir}"
 
 	# server setup
 	graph_path="${data_dir}/graph.txt"
@@ -24,16 +26,16 @@ do
 	labelStrMapPath="${data_dir}/entity_string_label.txt"
 	spatialNodePNPath="${data_dir}/spatialNodesZeroOneHopPN.txt"
 
-	jar_path="${code_dir}/Riso-Tree/target/Riso-Tree-0.0.1-SNAPSHOT.jar"
+	jar_path="${code_dir}/target/Riso-Tree-0.0.1-SNAPSHOT.jar"
 	selectivitiesStr=$(get_selectivity_list ${dataset})
 	# selectivitiesStr="0.00001,0.0001,0.001,0.01,0.1"
 	queryCount=100
-	outputDir="/hdd/code/yuhansun/result/query/${dataset}"
+	outputDir="${dir}/data/result/query/${dataset}"
 
 	# for nodeCount in 2 3 4 5
 	for nodeCount in 6 7
 	do
-		java -Xmx100g -jar ${jar_path} \
+		${java_cmd} -Xmx100g -jar ${jar_path} \
 			-f generateQuery \
 			-gp ${graph_path} \
 			-ep ${entity_path} \

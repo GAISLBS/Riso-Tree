@@ -327,8 +327,8 @@ public class Util {
    * Merge two array. Expanded or not can be decided by the length of the array. Assume that no
    * duplicate for both input and output.
    *
-   * @param i1
-   * @param i2
+   * @param L1
+   * @param L2
    * @return
    */
   public static <T extends Comparable> List<T> sortedListMerge(List<T> L1, List<T> L2) {

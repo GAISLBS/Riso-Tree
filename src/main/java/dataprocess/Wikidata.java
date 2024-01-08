@@ -874,7 +874,7 @@ public class Wikidata {
    * @param entities
    * @param labelList
    * @param dbPath
-   * @param mapPath
+   * @param labelStringMap
    * @throws Exception
    */
   public static void loadAllEntity(List<Entity> entities, String[] labelStringMap,

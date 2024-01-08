@@ -7,14 +7,14 @@ public class Config {
 
   private String SERVER_ROOT_URI = "http://localhost:7474/db/data";
 
-  public static String longitude_property_name = "lon";
-  public static String latitude_property_name = "lat";
+  public static String longitude_property_name = "longitude";
+  public static String latitude_property_name = "latitude";
   public static final String password = "syh19910205";
 
   // attention here, these settings change a lot
-  private String neo4j_version = "neo4j-community-3.1.1";
-  private Enums.system operatingSystem = Enums.system.MacOS;
-  private String dataset = Enums.Datasets.Yelp_100.name();
+  private String neo4j_version = "neo4j-community-3.4.12";
+  private Enums.system operatingSystem = Enums.system.Windows;
+  private String dataset = Enums.Datasets.Yelp.name();
 
   private int MAX_HOPNUM = 2;
   private int MAX_HMBR_HOPNUM = 3;

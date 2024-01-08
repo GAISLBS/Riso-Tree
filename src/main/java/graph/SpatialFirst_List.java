@@ -237,7 +237,7 @@ public class SpatialFirst_List {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile
+   * @param explain_Or_Profile
    * @param spa_predicates spatial predicates except for the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
    * @param id corresponding spatial graph node id (neo4j pos id)
@@ -439,7 +439,7 @@ public class SpatialFirst_List {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
+   * @param explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
    * @param spa_predicates spatial predicates except the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
    * @param ids corresponding spatial graph node ids that in this MBR (neo4j pos id)
@@ -522,7 +522,7 @@ public class SpatialFirst_List {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
+   * @param explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
    * @param spa_predicates spatial predicates except the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
    * @param ids corresponding spatial graph node ids that in this MBR (neo4j pos id)

@@ -37,7 +37,6 @@ public class ExperimentUtil {
    * @param password
    * @param clearCache
    * @param clearCacheMethod
-   * @param outputPath
    * @throws Exception
    */
   public static List<ResultRecord> runExperiment(String dbPath, String dataset,

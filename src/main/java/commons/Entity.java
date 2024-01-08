@@ -20,8 +20,6 @@ public class Entity {
    * Non-spatial entity
    * 
    * @param id
-   * @param lon
-   * @param lat
    */
   public Entity(int id) {
     this.IsSpatial = false;

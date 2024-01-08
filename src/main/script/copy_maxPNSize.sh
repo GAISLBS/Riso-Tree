@@ -1,9 +1,11 @@
 #!/bin/bash
-dataset="wikidata"
+#dataset="wikidata"
+#dataset="smallGraph"
+dataset="Yelp"
 
 # server
-dir="/hdd/code/yuhansun"
-data_dir="${dir}/data/wikidata_risotree"
+dir="D:/gspatial_test/Riso-Tree"
+data_dir="${dir}/data/${dataset}"
 
 split_mode="Gleenes"
 alpha="1.0"
@@ -14,8 +16,8 @@ do
 	echo ${suffix}
 
 	# source_path="${data_dir}/neo4j-community-3.4.12_node_edges/"
-	source_path="${data_dir}/neo4j-community-3.4.12_${suffix}"
-	target_path="${data_dir}/backup/neo4j-community-3.4.12_${suffix}"
+	source_path="${data_dir}/neo4j-community-3.4.12_Gleenes_1.0_-1_new_version"
+	target_path="${data_dir}/neo4j-community-3.4.12_${suffix}"
 
 	echo ${source_path}
 	echo ${target_path}

@@ -1,13 +1,15 @@
 #!/bin/bash
 ./package.sh
 
+java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+
 # for dataset in "Yelp_100" "Gowalla_100" "Patents_100_random_20"
-for dataset in "Yelp_100"
+for dataset in "smallGraph"
 do
 	# server
-	dir="/hdd/code/yuhansun"
+	dir="D:/gspatial_test/Riso-Tree"
 	data_dir="${dir}/data/${dataset}"
-	code_dir="${dir}/code"
+	code_dir="${dir}"
 
 	# server setup
 	graph_path="${data_dir}/graph.txt"
@@ -15,7 +17,7 @@ do
 	label_path="${data_dir}/graph_label.txt"
 	labelStrMapPath="${data_dir}/entity_string_label.txt"
 
-	jar_path="${code_dir}/Riso-Tree/target/Riso-Tree-0.0.1-SNAPSHOT.jar"
+	jar_path="${code_dir}/target/Riso-Tree-0.0.1-SNAPSHOT.jar"
 
 	split_mode="Gleenes"
 	alpha="1.0"
@@ -30,17 +32,17 @@ do
 		PNPathAndPrefix="${data_dir}/PathNeighbors_${suffix}"
 
 		# 0-hop
-		java -Xmx100g -jar ${jar_path} -f wikiConstructPNTimeSingleHopNoGraphDb \
+		${java_cmd} -Xmx100g -jar ${jar_path} -f wikiConstructPNTimeSingleHopNoGraphDb \
 		-c ${containID_path} -gp ${graph_path} -labelStrMapPath ${labelStrMapPath}\
 		-lp ${label_path} -hop 0 -PNPrefix ${PNPathAndPrefix} -maxPNSize -1
 
 		# 1-hop
-		java -Xmx100g -jar ${jar_path} -f wikiConstructPNTimeSingleHopNoGraphDb \
+		${java_cmd} -Xmx100g -jar ${jar_path} -f wikiConstructPNTimeSingleHopNoGraphDb \
 		-c ${containID_path} -gp ${graph_path} -labelStrMapPath ${labelStrMapPath}\
 		-lp ${label_path} -hop 1 -PNPrefix ${PNPathAndPrefix} -maxPNSize ${maxPNSize}
 
 		# 2-hop
-		java -Xmx100g -jar ${jar_path} -f wikiConstructPNTimeSingleHopNoGraphDb \
+		${java_cmd} -Xmx100g -jar ${jar_path} -f wikiConstructPNTimeSingleHopNoGraphDb \
 		-c ${containID_path} -gp ${graph_path} -labelStrMapPath ${labelStrMapPath}\
 		-lp ${label_path} -hop 2 -PNPrefix ${PNPathAndPrefix} -maxPNSize ${maxPNSize}
 

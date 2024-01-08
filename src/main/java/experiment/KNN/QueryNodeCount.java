@@ -392,8 +392,8 @@ public class QueryNodeCount {
    * @param dbPath
    * @param dataset
    * @param MAX_HOP
-   * @param KValueListString
-   * @param queryPath
+   * @param kValue
+   * @param queryPaths
    * @param queryCount
    * @param password
    * @param clearCache

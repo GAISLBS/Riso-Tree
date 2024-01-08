@@ -147,7 +147,7 @@ public class Distance {
   /**
    * use spatial first list approach
    * 
-   * @param nodeCount
+   * @param distanceList
    * @param query_id
    * @throws Exception
    */
@@ -226,7 +226,7 @@ public class Distance {
   /**
    * use RisoTree and graph first approach
    * 
-   * @param nodeCount
+   * @param distanceList
    * @param query_id
    * @throws Exception
    */

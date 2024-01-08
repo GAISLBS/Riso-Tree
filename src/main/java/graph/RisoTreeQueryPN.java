@@ -398,7 +398,7 @@ public class RisoTreeQueryPN {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile
+   * @param explain_Or_Profile
    * @param spa_predicates spatial predicates except for the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
    * @param ids corresponding graph spatial vertex id (neo4j pos id)
@@ -492,7 +492,7 @@ public class RisoTreeQueryPN {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
+   * @param explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
    * @param spa_predicates spatial predicates except the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
    * @param ids corresponding spatial graph node ids that in this MBR (neo4j pos id)
@@ -1515,7 +1515,7 @@ public class RisoTreeQueryPN {
    * Decide whether a node contains all the paths required. PN can be ignored (stored with []).
    *
    * @param node
-   * @param paths
+   * @param pathsAndShortPaths
    * @return
    */
   public boolean isNodeContainAllPathsIgnore(Node node,
@@ -2340,7 +2340,7 @@ public class RisoTreeQueryPN {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
+   * @param explain_Or_Profile -1 is Explain; 1 is Profile; the rest is nothing
    * @param spa_predicates spatial predicates except the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
    * @param ids corresponding spatial graph node ids that in this MBR (neo4j pos id)
@@ -2476,12 +2476,11 @@ public class RisoTreeQueryPN {
    * 
    * @param query_Graph
    * @param limit -1 is no limit
-   * @param Explain_Or_Profile
+   * @param explain_Or_Profile
    * @param spa_predicates spatial predicates except for the min_pos spatial predicate
    * @param pos query graph node id with the trigger spatial predicate
-   * @param id corresponding spatial graph node id (neo4j pos id)
-   * @param NL_hopnum shrunk query node <query_graph_id, hop_num>
-   * @param node the rtree node stores NL_list information
+   * @param ids corresponding spatial graph node id (neo4j pos id)
+   * @param min_hop_array shrunk query node <query_graph_id, hop_num>
    * @return
    */
   public String formSubgraphQuery_HMBR(Query_Graph query_Graph, int limit,

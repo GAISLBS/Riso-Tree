@@ -33,8 +33,6 @@ public class CypherDecoder {
    * Convert a Cypher query to Query_Graph format, including graph structure and spatial predicates.
    *
    * @param query
-   * @param spatialNode
-   * @param rectangle
    * @param service
    * @return
    * @throws Exception

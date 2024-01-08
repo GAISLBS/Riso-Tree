@@ -221,7 +221,7 @@ public class RTreeIndex implements SpatialIndexWriter {
    * {@code parent} is leaf node.
    *
    * @param parent
-   * @param pathNeighbors Path neighbors of the spatial object
+   * @param childLoc Path neighbors of the spatial object
    */
   private void adjustGraphLoc(Node parent, Map<String, int[]> childLoc) {
     long start = System.currentTimeMillis();
@@ -1212,7 +1212,7 @@ public class RTreeIndex implements SpatialIndexWriter {
   /**
    * General function for {@code indexNodes} are non-leaf and leaf nodes.
    *
-   * @param indexNodes
+   * @param parentIndexNode
    * @param geomRootNode
    * @param pathNeighbors
    * @return
@@ -2506,7 +2506,7 @@ public class RTreeIndex implements SpatialIndexWriter {
    * Control whether the PN comes into effect. It is set along with alpha. If alpha = 1.0, this
    * should be true. Otherwise, false.
    */
-  private Boolean spatialOnly = null;
+  private Boolean spatialOnly = false;
   /**
    * If alpha = 0.0.
    */

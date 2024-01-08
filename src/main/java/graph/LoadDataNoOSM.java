@@ -67,7 +67,7 @@ public class LoadDataNoOSM {
 
   static void iniParametersServer() {
     dataset = Enums.Datasets.Patents_100_random_20.name();
-    dbPath = dir + "/neo4j-community-3.1.1/data/databases/graph.db";
+    dbPath = dir + "/neo4j-community-3.4.12/data/databases/graph.db";
     graphPath = dir + "/graph.txt";
     entityPath = dir + "/entity.txt";
     labelListPath = dir + "/label.txt";
@@ -107,14 +107,14 @@ public class LoadDataNoOSM {
         break;
       case Windows:
         dbPath = String.format(
-            "D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\%s_%s\\data\\databases\\graph.db", dataset,
+            "D:\\gspatial_test\\Riso-Tree\\data\\%s\\%s_%s\\data\\databases\\graph.db_Gleene_1.0", dataset,
             version, dataset);
-        entityPath = String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\entity.txt", dataset);
-        labelListPath = String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\label.txt", dataset);
+        entityPath = String.format("D:\\gspatial_test\\Riso-Tree\\data\\%s\\entity.txt", dataset);
+        labelListPath = String.format("D:\\gspatial_test\\Riso-Tree\\data\\%s\\label.txt", dataset);
         mapPath =
-            String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\node_map_RTree.txt", dataset);
-        graphPath = String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\graph.txt", dataset);
-        hmbrPath = String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\HMBR.txt", dataset);
+            String.format("D:\\gspatial_test\\Riso-Tree\\data\\%s\\node_map_RTree.txt", dataset);
+        graphPath = String.format("D:\\gspatial_test\\Riso-Tree\\data\\%s\\graph.txt", dataset);
+        hmbrPath = String.format("D:\\gspatial_test\\Riso-Tree\\data\\%s\\HMBR.txt", dataset);
       default:
         break;
     }
@@ -714,7 +714,7 @@ public class LoadDataNoOSM {
    *
    * @param dbPath
    * @param dataset
-   * @param entityPath
+   * @param entities
    */
   public void wikiConstructRTree(String dbPath, String dataset, ArrayList<Entity> entities,
       List<Map<String, int[]>> spatialNodesPathNeighbors, double alpha, int maxPNSize) {

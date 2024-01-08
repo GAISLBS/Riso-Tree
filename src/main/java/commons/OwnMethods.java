@@ -590,7 +590,7 @@ public class OwnMethods {
    * @param labels labels for the data graph
    * @param entities
    * @param node_count size of the generated graph
-   * @param spa_pred_count number of spatial predicates
+   * @param labelStringMap number of spatial predicates
    * @return
    * @throws Exception
    */
@@ -1407,7 +1407,7 @@ public class OwnMethods {
    * The STRTree constructed using entity as object can only be used for range search. It cannot be
    * used for any Nearest Neighbor query.
    *
-   * @param entities
+   * @param rectangles
    * @return
    */
   public static STRtree constructSTRTreeWithMyRectangles(List<MyRectangle> rectangles) {
