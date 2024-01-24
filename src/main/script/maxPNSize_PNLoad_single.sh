@@ -1,10 +1,10 @@
 #!/bin/bash
-./package.sh
+#./package.sh
 
 java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
 
 # for dataset in "Yelp_100" "Gowalla_100" "Patents_100_random_20"
-for dataset in "smallGraph"
+for dataset in "Yelp"
 do
 	# server
 	dir="D:/gspatial_test/Riso-Tree"

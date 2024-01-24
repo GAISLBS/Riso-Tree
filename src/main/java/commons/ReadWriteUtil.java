@@ -151,7 +151,7 @@ public class ReadWriteUtil {
    */
   public static List<String> readFileAllLines(String filepath, String skipFlag) throws Exception {
     List<String> lines = new LinkedList<>();
-    BufferedReader reader = Util.getBufferedReader(filepath);
+    BufferedReader reader = Util.getBufferedReader(filepath + ".txt");
     String line = null;
     while ((line = reader.readLine()) != null) {
       if (line.startsWith(skipFlag)) {

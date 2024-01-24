@@ -1,8 +1,8 @@
 #!/bin/bash
-./package.sh
+#./package.sh
 
 function get_selectivity_list() {
-	if [ $1 == "Yelp_100" ];	then
+	if [ $1 == "Yelp" ];	then
 		echo "0.0001,0.001,0.01,0.1"
 	else
 		echo "0.000001,0.00001,0.0001,0.001,0.01,0.1"
@@ -12,7 +12,7 @@ function get_selectivity_list() {
 java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
 
 # for dataset in "Yelp_100" "foursquare_100" "Gowalla_100" "wikidata"
-for dataset in "smallGraph"
+for dataset in "Yelp"
 do
 	# server
 	dir="D:/gspatial_test/Riso-Tree"

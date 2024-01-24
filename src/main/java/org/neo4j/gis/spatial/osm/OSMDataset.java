@@ -234,7 +234,6 @@ public class OSMDataset
 
   public class Way extends OSMNode implements Iterable<WayPoint>, Iterator<WayPoint> {
     private Iterator<Node> wayPointNodeIterator;
-
     public Way(Node node) {
       super(node);
     }

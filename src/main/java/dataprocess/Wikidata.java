@@ -157,10 +157,10 @@ public class Wikidata {
 
   public static void main(String[] args) throws Exception {
     // TODO Auto-generated method stub
-    String dir = "D:/Project_Data/wikidata-20180308-truthy-BETA.nt";
+    String dir = "D:\\gspatial_test\\Riso-Tree\\data\\wikidata";
     String sourceFilename = "slice_100000.nt";
     String dbPath =
-        "D:\\Neo4jData\\neo4jDatabases\\database-ae5a632c-076d-42a6-ac8d-61f8f72af7f9\\installation-3.4.12\\data\\databases\\graph.db";
+        "D:\\gspatial_test\\Riso-Tree\\data\\wikidata\\neo4j-community-3.4.12\\data\\databases\\graph.db";
     Wikidata wikidata = new Wikidata(dir, sourceFilename, dbPath);
 
     // wikidata.loadAttributesDbService();
@@ -170,9 +170,9 @@ public class Wikidata {
     // wikidata.cutDescription();
     // wikidata.checkWikiLabelData();
 
-    // extractEntityMap();
+    wikidata.extractEntityMap();
     // wikidata.extractEntityToEntityRelationEdgeFormat();
-    wikidata.extractEntityToEntityRelation();
+//    wikidata.extractEntityToEntityRelation();
     // checkGraphVerticesCount();
     // generateEntityFile();
 

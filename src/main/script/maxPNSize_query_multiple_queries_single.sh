@@ -5,7 +5,7 @@ dir="D:/gspatial_test/Riso-Tree"
 result_dir="${dir}/data/result"
 maxPNSize_result_dir="${result_dir}/maxPNSizeRisoTreeQuery"
 code_dir="${dir}"
-password="syhSYH.19910205"
+password="0000"
 
 clear_cache="false"
 clear_cache_method="DOUBLE"
@@ -15,7 +15,7 @@ java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
 source ./utility.sh
 
 # for dataset in "Yelp_100" "Gowalla_100" "foursquare_100" "wikidata"
-for dataset in "smallGraph"
+for dataset in "Yelp"
 do
 	data_dir="${dir}/data/${dataset}"
 	output_dir="${maxPNSize_result_dir}/${dataset}"
@@ -44,14 +44,14 @@ do
 	# labelStrMapPath="${data_dir}/entity_string_label.txt"
 
 	query_dir="${dir}/data/result/query/${dataset}"
-	node_count=2
+	node_count=6
 	query_count=50
 
-	if [ $dataset = "wikidata"];	then
-		selectivity_list_str="0.00001 0.0001"
-	else
-		selectivity_list_str="0.0001"
-	fi
+	if [ $dataset = "wikidata" ];	then
+  		selectivity_list_str="0.00001 0.0001"
+  else
+  		selectivity_list_str="0.1 0.01 0.001"
+  fi
 
 	# for selectivity in 0.000001 0.00001 0.0001 0.001 0.01
 	# for selectivity in 0.01 0.001 0.0001 0.00001 0.000001

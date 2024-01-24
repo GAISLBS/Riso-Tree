@@ -53,7 +53,7 @@ public class Neo4jFeatureBuilder {
   private final List<String> extraPropertyNames;
 
   /**
-   * 
+   *
    */
   public Neo4jFeatureBuilder(SimpleFeatureType sft, List<String> extraPropertyNames) {
     this.builder = new SimpleFeatureBuilder(sft);
@@ -61,7 +61,7 @@ public class Neo4jFeatureBuilder {
   }
 
   /**
-   * 
+   *
    */
   public Neo4jFeatureBuilder(Layer layer) {
     this(getTypeFromLayer(layer), Arrays.asList(layer.getExtraPropertyNames()));
@@ -85,11 +85,11 @@ public class Neo4jFeatureBuilder {
 
   public static SimpleFeatureType getTypeFromLayer(Layer layer) {
     return getType(layer.getName(), layer.getGeometryType(), layer.getCoordinateReferenceSystem(),
-        layer.getExtraPropertyNames());
+            layer.getExtraPropertyNames());
   }
 
   public static SimpleFeatureType getType(String name, Integer geometryTypeId,
-      CoordinateReferenceSystem crs, String[] extraPropertyNames) {
+                                          CoordinateReferenceSystem crs, String[] extraPropertyNames) {
     List<AttributeDescriptor> types = readAttributes(geometryTypeId, crs, extraPropertyNames);
 
     // find Geometry type
@@ -101,7 +101,7 @@ public class Neo4jFeatureBuilder {
     } else if ((geomBinding == Polygon.class) || (geomBinding == MultiPolygon.class)) {
       parent = BasicFeatureTypes.POLYGON;
     } else if ((geomBinding == LineString.class) || (geomBinding == MultiLineString.class)
-        || (geomBinding == LinearRing.class)) {
+            || (geomBinding == LinearRing.class)) {
       parent = BasicFeatureTypes.LINE;
     }
 
@@ -120,9 +120,9 @@ public class Neo4jFeatureBuilder {
   }
 
   private static List<AttributeDescriptor> readAttributes(Integer geometryTypeId,
-      CoordinateReferenceSystem crs, String[] extraPropertyNames) {
+                                                          CoordinateReferenceSystem crs, String[] extraPropertyNames) {
     Class<? extends Geometry> geometryClass =
-        SpatialDatabaseService.convertGeometryTypeToJtsClass(geometryTypeId);
+            SpatialDatabaseService.convertGeometryTypeToJtsClass(geometryTypeId);
 
     AttributeTypeBuilder build = new AttributeTypeBuilder();
     build.setName(Classes.getShortName(geometryClass));
@@ -155,4 +155,3 @@ public class Neo4jFeatureBuilder {
     return attributes;
   }
 }
-

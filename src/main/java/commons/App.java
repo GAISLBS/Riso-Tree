@@ -53,20 +53,20 @@ public class App {
     switch (systemName) {
       case Ubuntu:
         db_path = String.format(
-            "/home/yuhansun/Documents/GeoGraphMatchData/%s_%s/data/databases/graph.db",
-            neo4jVersion, dataset);
+                "/home/yuhansun/Documents/GeoGraphMatchData/%s_%s/data/databases/graph.db",
+                neo4jVersion, dataset);
         querygraph_path = "/mnt/hgfs/Ubuntu_shared/GeoMinHop/query/query_graph.txt";
         graph_pos_map_path =
-            "/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/" + dataset + "/node_map_RTree.txt";
+                "/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/" + dataset + "/node_map_RTree.txt";
         log_path = "/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/" + dataset + "/test.log";
         break;
       case Windows:
         db_path = String.format(
-            "D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\%s_%s\\data\\databases\\graph.db", dataset,
-            neo4jVersion, dataset);
+                "D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\%s_%s\\data\\databases\\graph.db", dataset,
+                neo4jVersion, dataset);
         querygraph_path = "D:\\Ubuntu_shared\\GeoMinHop\\query\\query_graph.txt";
         graph_pos_map_path =
-            "D:\\Ubuntu_shared\\GeoMinHop\\data\\" + dataset + "\\node_map_RTree.txt";
+                "D:\\Ubuntu_shared\\GeoMinHop\\data\\" + dataset + "\\node_map_RTree.txt";
         log_path = "D:\\Ubuntu_shared\\GeoMinHop\\data\\" + dataset + "\\test.log";
       default:
         break;
@@ -115,7 +115,7 @@ public class App {
     ExecutionPlanDescription executionPlanDescription = result.getExecutionPlanDescription();
     Util.println(executionPlanDescription);
     List<ExecutionPlanDescription> plans =
-        ExecutionPlanDescriptionUtil.getRequired(executionPlanDescription);
+            ExecutionPlanDescriptionUtil.getRequired(executionPlanDescription);
     for (ExecutionPlanDescription planDescription : plans) {
       Util.println(planDescription.getArguments());
       Util.println(planDescription.getIdentifiers());
@@ -128,10 +128,10 @@ public class App {
     CypherParser parser = new CypherParser();
     String query1 = "start a = node(*) match p = (a)--(b)--(c),q = (c)--(d) return p,q limit 10";
     String query2 =
-        "start a = node(*) match (a)--(b)--(c:TEST) where a.type = 0 return a, b, c limit 10";
+            "start a = node(*) match (a)--(b)--(c:TEST) where a.type = 0 return a, b, c limit 10";
     String query3 = "match (a:A)--(b:B)--(c:TEST) where a.type = 0 return a, b, c limit 10";
     String query4 =
-        "MATCH (a:`heritage designation`)-[b]-(spatialnode:museum) WHERE 22.187478257613602 <= spatialnode.lat <= 22.225842149771214 AND 113.50180238485339 <= spatialnode.lon <= 113.56607615947725 RETURN spatialnode LIMIT 5";
+            "MATCH (a:`heritage designation`)-[b]-(spatialnode:museum) WHERE 22.187478257613602 <= spatialnode.lat <= 22.225842149771214 AND 113.50180238485339 <= spatialnode.lon <= 113.56607615947725 RETURN spatialnode LIMIT 5";
 
     Statement statement = parser.parse(query4, null);
     Query query = (Query) statement;
@@ -175,7 +175,7 @@ public class App {
 
   public static void getLeafStatisticalInfo() throws Exception {
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
     Transaction tx = databaseService.beginTx();
     List<Node> nodes = RTreeUtility.getRTreeLeafLevelNodes(databaseService, dataset);
     ArrayList<Integer> statistic = new ArrayList<Integer>();
@@ -224,19 +224,19 @@ public class App {
 
   public static void restartNeo4jJava() {
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
     databaseService.shutdown();
   }
 
   public static void matchOnDifferentLabelCountDatabase() {
     String dbpath1 =
-        "/home/yuhansun/Documents/GeoGraphMatchData/neo4j-community-3.1.1_Patents_2_random_20/data/databases/graph.db";
+            "/home/yuhansun/Documents/GeoGraphMatchData/neo4j-community-3.1.1_Patents_2_random_20/data/databases/graph.db";
     String dbpath2 =
-        "/home/yuhansun/Documents/GeoGraphMatchData/neo4j-community-3.1.1_Patents_100_random_20/data/databases/graph.db";
+            "/home/yuhansun/Documents/GeoGraphMatchData/neo4j-community-3.1.1_Patents_100_random_20/data/databases/graph.db";
 
     OwnMethods.ClearCache(password);
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(dbpath1));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(dbpath1));
     long start = System.currentTimeMillis();
     String query = "profile match (a0:GRAPH_0)-->(a1:GRAPH_1) return id(a0), id(a1)";
     Result result = databaseService.execute(query);
@@ -262,7 +262,7 @@ public class App {
 
   public static void propertyPageAccessTest() {
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
     // String query = "profile match (n:GRAPH_1) return id(n)";
     // String query = "profile match (n:GRAPH_1) where 10 < n.lat < 100 return id(n)";
     // String query = "profile match (n:GRAPH_1) where 10 < n.lon < 100 return id(n)";
@@ -282,9 +282,9 @@ public class App {
 
   private static void cliqueTest() {
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
     String query =
-        "match (a)--(b), (a)--(c), (b)--(c) return labels(a), labels(b), labels(c) limit 100";
+            "match (a)--(b), (a)--(c), (b)--(c) return labels(a), labels(b), labels(c) limit 100";
     Transaction tx = databaseService.beginTx();
     Result result = databaseService.execute(query);
     while (result.hasNext())
@@ -297,9 +297,9 @@ public class App {
 
   private static void graphCompare() {
     String graphPath1 =
-        String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/graph.txt", dataset);
+            String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/graph.txt", dataset);
     String graphPath2 = String
-        .format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/graph_entity_newformat.txt", dataset);
+            .format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/graph_entity_newformat.txt", dataset);
 
     ArrayList<ArrayList<Integer>> graph1 = GraphUtil.ReadGraph(graphPath1);
     ArrayList<ArrayList<Integer>> graph2 = GraphUtil.ReadGraph(graphPath2);
@@ -311,18 +311,18 @@ public class App {
 
   private static void selectivityTest() {
     String entityPath =
-        String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/entity.txt", dataset);
+            String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/entity.txt", dataset);
     ArrayList<Entity> entities = OwnMethods.ReadEntity(entityPath);
     STRtree stRtree = OwnMethods.constructSTRTree(entities);
 
     String queryRectPath = String.format(
-        "/mnt/hgfs/Ubuntu_shared/GeoMinHop/query/spa_predicate/%s/queryrect_%d.txt", dataset, 114);
+            "/mnt/hgfs/Ubuntu_shared/GeoMinHop/query/spa_predicate/%s/queryrect_%d.txt", dataset, 114);
     ArrayList<MyRectangle> queryRectangles = OwnMethods.ReadQueryRectangle(queryRectPath);
 
     int index = 0, countSum = 0;
     for (MyRectangle rect : queryRectangles) {
       List<Entity> results =
-          stRtree.query(new Envelope(rect.min_x, rect.max_x, rect.min_y, rect.max_y));
+              stRtree.query(new Envelope(rect.min_x, rect.max_x, rect.min_y, rect.max_y));
       Util.println(results.size());
       countSum += results.size();
       index++;
@@ -336,14 +336,14 @@ public class App {
   public static void rangeQueryCountCompare() {
     String layerName = dataset;
     String queryRectanglePath = String
-        .format("D:\\Ubuntu_shared\\GeoMinHop\\query\\spa_predicate\\%s\\queryrect_1.txt", dataset);
+            .format("D:\\Ubuntu_shared\\GeoMinHop\\query\\spa_predicate\\%s\\queryrect_1.txt", dataset);
     // String queryRectanglePath =
     // String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/query/spa_predicate/%s/queryrect_1.txt",
     // dataset);
     try {
       Util.println(db_path);
       GraphDatabaseService databaseService =
-          new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+              new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
       SpatialDatabaseService spatialDatabaseService = new SpatialDatabaseService(databaseService);
       Layer layer = spatialDatabaseService.getLayer(layerName);
 
@@ -354,7 +354,7 @@ public class App {
       Node root = RTreeUtility.getRTreeRoot(databaseService, layerName);
       for (MyRectangle queryRectangle : queryRectangles) {
         Envelope envelope = new Envelope(queryRectangle.min_x, queryRectangle.max_x,
-            queryRectangle.min_y, queryRectangle.max_y);
+                queryRectangle.min_y, queryRectangle.max_y);
         List<SpatialDatabaseRecord> resultGeoPipe = OSM_Utility.RangeQuery(layer, envelope);
 
         LinkedList<Node> resultMyMethod = SpatialFirst.rangeQuery(root, queryRectangle);
@@ -401,7 +401,7 @@ public class App {
     // String entityPath = String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\entity.txt",
     // dataset);
     String queryRectanglePath = String
-        .format("D:\\Ubuntu_shared\\GeoMinHop\\query\\spa_predicate\\%s\\queryrect_1.txt", dataset);
+            .format("D:\\Ubuntu_shared\\GeoMinHop\\query\\spa_predicate\\%s\\queryrect_1.txt", dataset);
 
     // String entityPath = String.format("/mnt/hgfs/Ubuntu_shared/GeoMinHop/data/%s/entity.txt",
     // dataset);
@@ -413,7 +413,7 @@ public class App {
     try {
       Util.println(db_path);
       GraphDatabaseService databaseService =
-          new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+              new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
       SpatialDatabaseService spatialDatabaseService = new SpatialDatabaseService(databaseService);
       Layer layer = spatialDatabaseService.getLayer(layerName);
 
@@ -424,7 +424,7 @@ public class App {
       Transaction tx = databaseService.beginTx();
       for (MyRectangle queryRectangle : queryRectangles) {
         Envelope envelope = new Envelope(queryRectangle.min_x, queryRectangle.max_x,
-            queryRectangle.min_y, queryRectangle.max_y);
+                queryRectangle.min_y, queryRectangle.max_y);
         List<SpatialDatabaseRecord> results = OSM_Utility.RangeQuery(layer, envelope);
         for (SpatialDatabaseRecord record : results) {
           record.getGeomNode().getId();
@@ -467,7 +467,7 @@ public class App {
       String entityPath = "D:\\Ubuntu_shared\\GeoMinHop\\data\\Gowalla\\entity.txt";
       String dbPath = "D:\\Ubuntu_shared\\neo4j-community-3.1.1\\data\\databases\\graph.db";
       GraphDatabaseService databaseService =
-          new GraphDatabaseFactory().newEmbeddedDatabase(new File(dbPath));
+              new GraphDatabaseFactory().newEmbeddedDatabase(new File(dbPath));
 
       SpatialDatabaseService spatialDatabaseService = new SpatialDatabaseService(databaseService);
 
@@ -537,9 +537,9 @@ public class App {
   public static void generateLabelList() {
     String dataset = "foursquare";
     String entityPath =
-        String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\entity.txt", dataset);
+            String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\entity.txt", dataset);
     String labelListPath =
-        String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\label.txt", dataset);
+            String.format("D:\\Ubuntu_shared\\GeoMinHop\\data\\%s\\label.txt", dataset);
 
     OwnMethods.getLabelListFromEntity(entityPath, labelListPath);
   }
@@ -549,7 +549,7 @@ public class App {
     // + "neo4j-community-3.1.1_foursquare_backup\\data\\databases\\graph.db";;
     Util.println("db path:" + db_path);
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
     Transaction tx = databaseService.beginTx();
     // Node node = databaseService.getNodeById(3743197);
     // Node node = databaseService.getNodeById(766033);
@@ -570,15 +570,15 @@ public class App {
   public static void Naive() {
     String query = "";
     query += String.format(
-        "profile match (a0:GRAPH_0),(a1:GRAPH_1),(a2:GRAPH_0),(a3:GRAPH_1),(a0)-[:GRAPH_LINK]-(a1),(a0)-[:GRAPH_LINK]-(a2),(a2)-[:GRAPH_LINK]-(a3) ")
-        + String.format(" where %f <= a%d.%s <= %f ", queryRectangle.min_x, 1, lon_name,
+            "profile match (a0:GRAPH_0),(a1:GRAPH_1),(a2:GRAPH_0),(a3:GRAPH_1),(a0)-[:GRAPH_LINK]-(a1),(a0)-[:GRAPH_LINK]-(a2),(a2)-[:GRAPH_LINK]-(a3) ")
+            + String.format(" where %f <= a%d.%s <= %f ", queryRectangle.min_x, 1, lon_name,
             queryRectangle.max_x)
-        + String.format("and %f <= a%d.%s <= %f", queryRectangle.min_y, 1, lat_name,
+            + String.format("and %f <= a%d.%s <= %f", queryRectangle.min_y, 1, lat_name,
             queryRectangle.max_y);
     query += " return id(a0), id(a1), id(a2), id(a3)";
     Util.println(query);
     GraphDatabaseService databaseService =
-        new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
+            new GraphDatabaseFactory().newEmbeddedDatabase(new File(db_path));
     try {
       Transaction tx = databaseService.beginTx();
       Result result = databaseService.execute(query);
