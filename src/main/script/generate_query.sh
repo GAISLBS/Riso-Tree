@@ -9,7 +9,8 @@ function get_selectivity_list() {
 	fi
 }
 
-java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+#java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+java_cmd="C:/Users/pc/.jdks/azul-1.8.0_402/bin/java"
 
 # for dataset in "Yelp_100" "foursquare_100" "Gowalla_100" "wikidata"
 for dataset in "Yelp"

@@ -34,7 +34,8 @@ db_path="${data_dir}/${db_dir_name}/data/databases/graph.db"
 containID_path="${data_dir}/containID_${suffix}.txt"
 PNPathAndPrefix="${data_dir}/PathNeighbors_${suffix}"
 
-java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+#java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+java_cmd="C:/Users/pc/.jdks/azul-1.8.0_402/bin/java"
 
 # Generate the 0-1 hop pn for spatial nodes
 ${java_cmd} -Xmx100g -jar ${jar_path} \
