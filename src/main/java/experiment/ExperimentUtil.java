@@ -367,7 +367,8 @@ public class ExperimentUtil {
     Map<QueryStatistic, Object> statisticMap = record.statisticMap;
     for (QueryStatistic queryStatistic : queryStatistics) {
       if (!statisticMap.containsKey(queryStatistic)) {
-        throw new Exception(queryStatistic + " does not exist in record!");
+//        throw new Exception(queryStatistic + " does not exist in record!");
+        return "\t no record";
       }
       valueList.add(statisticMap.get(queryStatistic).toString());
     }
@@ -389,9 +390,11 @@ public class ExperimentUtil {
     for (ResultRecord record : records) {
       Map<QueryStatistic, Object> statisticMap = record.statisticMap;
       if (!statisticMap.containsKey(queryStatistic)) {
-        throw new Exception(queryStatistic + " does not exist in record!");
+//        throw new Exception(queryStatistic + " does not exist in record!");
+        sum += 0;
+      } else {
+        sum += Long.parseLong(statisticMap.get(queryStatistic).toString());
       }
-      sum += Long.parseLong(statisticMap.get(queryStatistic).toString());
     }
     return sum / records.size();
   }
