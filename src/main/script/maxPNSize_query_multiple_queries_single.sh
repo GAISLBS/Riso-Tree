@@ -10,8 +10,8 @@ password="0000"
 clear_cache="false"
 clear_cache_method="DOUBLE"
 
-#java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
-java_cmd="C:/Users/pc/.jdks/azul-1.8.0_402/bin/java"
+java_cmd="C:/Users/KJY/.jdks/temurin-1.8.0_392/bin/java"
+#java_cmd="C:/Users/pc/.jdks/azul-1.8.0_402/bin/java"
 
 source ./utility.sh
 
