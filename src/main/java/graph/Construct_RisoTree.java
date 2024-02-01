@@ -1244,10 +1244,44 @@ public class Construct_RisoTree {
 
   public static HashMap<Integer, ArrayList<Integer>> dividedByLabels(
       TreeSet<Integer> nextPathNeighbors, ArrayList<ArrayList<Integer>> label_list, int maxPNSize) {
-    HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors =
-        new HashMap<Integer, ArrayList<Integer>>();
+    HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors = new HashMap<Integer, ArrayList<Integer>>();
     for (int neighborID : nextPathNeighbors) {
       for (int label : label_list.get(neighborID)) {
+        if (pathLabelNeighbors.containsKey(label)) {
+          ArrayList<Integer> value = pathLabelNeighbors.get(label);
+          if (value.size() == 0) { // PN has already reached the maxPNSize
+            continue;
+          }
+
+          if (value.size() == maxPNSize) { // PN will reach the maxPNSize after this insertion
+            value = new ArrayList<>();
+            pathLabelNeighbors.put(label, value);
+            continue;
+          }
+
+          value.add(neighborID);
+        } else {
+          ArrayList<Integer> arrayList = new ArrayList<Integer>();
+          arrayList.add(neighborID);
+          pathLabelNeighbors.put(label, arrayList);
+        }
+
+      }
+    }
+    return pathLabelNeighbors;
+  }
+
+  public static HashMap<Integer, ArrayList<Integer>> dividedByLabels(
+          TreeSet<Integer> nextPathNeighbors, String[] label_list, int maxPNSize) {
+    HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors = new HashMap<Integer, ArrayList<Integer>>();
+    ArrayList<ArrayList<Integer>> labelList = new ArrayList<>();
+    for (String s : label_list) {
+      ArrayList<Integer> innerList = new ArrayList<>();
+      innerList.add(Integer.parseInt(s));
+      labelList.add(innerList);
+    }
+    for (int neighborID : nextPathNeighbors) {
+      for (int label : labelList.get(neighborID)) {
         if (pathLabelNeighbors.containsKey(label)) {
           ArrayList<Integer> value = pathLabelNeighbors.get(label);
           if (value.size() == 0) { // PN has already reached the maxPNSize

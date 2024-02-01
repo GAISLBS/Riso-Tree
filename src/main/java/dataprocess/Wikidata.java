@@ -614,14 +614,17 @@ public class Wikidata {
       ArrayList<ArrayList<Integer>> graph, ArrayList<ArrayList<Integer>> graphLabels,
       String[] labelStringMap, int id, int maxPNSize, int MAX_HOPNUM, FileWriter writer)
       throws Exception {
-    Map<String, ArrayList<Integer>> zeroHopPathNeighbors =
-        generateZeroHopPNForSingleSpatialNode(id, graphLabels.get(id), labelStringMap);
+    Map<String, ArrayList<Integer>> zeroHopPathNeighbors = generateZeroHopPNForSingleSpatialNode(id, labelStringMap);
+//    Map<String, ArrayList<Integer>> zeroHopPathNeighbors =
+//        generateZeroHopPNForSingleSpatialNode(id, graphLabels.get(id), labelStringMap);
     writer.write(id + "\n");
     writePathNeighbors(writer, zeroHopPathNeighbors);
     Map<String, ArrayList<Integer>> pre = zeroHopPathNeighbors;
     for (int i = 1; i <= MAX_HOPNUM; i++) {
       Map<String, ArrayList<Integer>> curHopPathNeighbors =
-          generateSecondHopPN(pre, graph, graphLabels, labelStringMap, maxPNSize);
+          generateNHopPN(pre, graph, graphLabels, labelStringMap, maxPNSize);
+//      Map<String, ArrayList<Integer>> curHopPathNeighbors =
+//          generateSecondHopPN(pre, graph, graphLabels, labelStringMap, maxPNSize);
       writePathNeighbors(writer, curHopPathNeighbors);
       pre = curHopPathNeighbors;
     }
@@ -704,8 +707,27 @@ public class Wikidata {
       Entry<String, ArrayList<Integer>> entry = iterator.next();
       String key = entry.getKey();
       TreeSet<Integer> curNeighbors = getNextPathNeighborsInSet(entry.getValue(), graph);
-      HashMap<Integer, ArrayList<Integer>> pn =
-          Construct_RisoTree.dividedByLabels(curNeighbors, graphLabels, maxPNSize);
+      HashMap<Integer, ArrayList<Integer>> pn = Construct_RisoTree.dividedByLabels(curNeighbors, graphLabels, maxPNSize);
+      for (int pathEndLabel : pn.keySet()) {
+        String attach = labelStringMap[pathEndLabel];
+        String propertyName = RisoTreeUtil.getAttachName(key, attach);
+        curHopPathNeighbors.put(propertyName, pn.get(pathEndLabel));
+      }
+    }
+    return curHopPathNeighbors;
+  }
+
+  private static Map<String, ArrayList<Integer>> generateNHopPN(
+          Map<String, ArrayList<Integer>> preHopPN, ArrayList<ArrayList<Integer>> graph,
+          ArrayList<ArrayList<Integer>> graphLabels, String[] labelStringMap, int maxPNSize) {
+    Map<String, ArrayList<Integer>> curHopPathNeighbors = new HashMap<>();
+    Iterator<Entry<String, ArrayList<Integer>>> iterator = preHopPN.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Entry<String, ArrayList<Integer>> entry = iterator.next();
+      String key = entry.getKey(); // previous hop's neighbor label
+      TreeSet<Integer> curIndexes = getNextPathNeighborsInSet(entry.getValue(), graph); // current Indexes
+      TreeSet<Integer> curNeighbors = getNextPathNeighborsInSet(curIndexes, graph); // previous hop's indexes
+      HashMap<Integer, ArrayList<Integer>> pn = Construct_RisoTree.dividedByLabels(curNeighbors, labelStringMap, maxPNSize);
       for (int pathEndLabel : pn.keySet()) {
         String attach = labelStringMap[pathEndLabel];
         String propertyName = RisoTreeUtil.getAttachName(key, attach);
@@ -820,6 +842,16 @@ public class Wikidata {
       pathNeighbor.add(id);
       pathNeighbors.put(propertyName, pathNeighbor);
     }
+    return pathNeighbors;
+  }
+
+  private static Map<String, ArrayList<Integer>> generateZeroHopPNForSingleSpatialNode(int id, String[] labelStringMap) {
+    Map<String, ArrayList<Integer>> pathNeighbors = new HashMap<>();
+    String labelStr = labelStringMap[id];
+    String propertyName = RisoTreeUtil.getAttachName(Config.PNPrefix, labelStr);
+    ArrayList<Integer> pathNeighbor = new ArrayList<>();
+    pathNeighbor.add(id);
+    pathNeighbors.put(propertyName, pathNeighbor);
     return pathNeighbors;
   }
 
