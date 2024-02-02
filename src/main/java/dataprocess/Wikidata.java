@@ -724,13 +724,13 @@ public class Wikidata {
     Iterator<Entry<String, ArrayList<Integer>>> iterator = preHopPN.entrySet().iterator();
     while (iterator.hasNext()) {
       Entry<String, ArrayList<Integer>> entry = iterator.next();
-      String key = entry.getKey(); // previous hop's neighbor label
-      TreeSet<Integer> curIndexes = getNextPathNeighborsInSet(entry.getValue(), graph); // current Indexes
-      TreeSet<Integer> curNeighbors = getNextPathNeighborsInSet(curIndexes, graph); // previous hop's indexes
-      HashMap<Integer, ArrayList<Integer>> pn = Construct_RisoTree.dividedByLabels(curNeighbors, labelStringMap, maxPNSize);
+      String preLabel = entry.getKey(); // previous id's label ex. 3305's label : '1'
+      ArrayList<Integer> preIndexes = entry.getValue();  // previous indexes ex. 3305
+      TreeSet<Integer> curIndexes = getNextPathNeighborsInSet(entry.getValue(), graph); // current Indexes ex. 3305's neighbors 768
+      HashMap<Integer, ArrayList<Integer>> pn = Construct_RisoTree.dividedByLabels(preIndexes ,graph, graphLabels, maxPNSize);
       for (int pathEndLabel : pn.keySet()) {
-        String attach = labelStringMap[pathEndLabel];
-        String propertyName = RisoTreeUtil.getAttachName(key, attach);
+        String attach = String.valueOf(pathEndLabel);
+        String propertyName = RisoTreeUtil.getAttachName(preLabel, attach);
         curHopPathNeighbors.put(propertyName, pn.get(pathEndLabel));
       }
     }
@@ -852,6 +852,18 @@ public class Wikidata {
     ArrayList<Integer> pathNeighbor = new ArrayList<>();
     pathNeighbor.add(id);
     pathNeighbors.put(propertyName, pathNeighbor);
+    return pathNeighbors;
+  }
+
+  private static Map<String, ArrayList<Integer>> generateZeroHopPNForSingleSpatialNode(TreeSet<Integer> indexes, String[] labelStringMap) {
+    Map<String, ArrayList<Integer>> pathNeighbors = new HashMap<>();
+    for (int id : indexes) {
+      String labelStr = labelStringMap[id];
+      String propertyName = RisoTreeUtil.getAttachName(Config.PNPrefix, labelStr);
+      ArrayList<Integer> pathNeighbor = new ArrayList<>();
+      pathNeighbor.add(id);
+      pathNeighbors.put(propertyName, pathNeighbor);
+    }
     return pathNeighbors;
   }
 
