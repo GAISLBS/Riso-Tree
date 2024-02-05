@@ -908,7 +908,8 @@ public class Wikidata {
     ArrayList<Entity> entities = GraphUtil.ReadEntity(entityPath);
     ArrayList<ArrayList<Integer>> labels = GraphUtil.ReadGraph(graphLabelPath);
     String[] labelStringMap = readLabelMap(entityStringLabelMapPath);
-    loadAllEntity(entities, labelStringMap, labels, dbPath);
+    loadAllEntity(entities, labelStringMap, dbPath);
+//    loadAllEntity(entities, labelStringMap, labels, dbPath);
   }
 
   /**
@@ -940,6 +941,30 @@ public class Wikidata {
           Label label = Label.label(labelString);
           labels.add(label);
         }
+        if (entity.IsSpatial) {
+          properties.put(lon_name, entity.lon);
+          properties.put(lat_name, entity.lat);
+        }
+        inserter.createNode(i, properties, labels.toArray(new Label[labels.size()]));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      Util.close(inserter);
+    }
+    Util.close(inserter);
+  }
+
+  public static void loadAllEntity(List<Entity> entities, String[] labelStringMap, String dbPath) throws Exception {
+    BatchInserter inserter = null;
+    try {
+      inserter = Util.getBatchInserter(dbPath);
+      LOGGER.info("Batch insert nodes into: " + dbPath);
+      for (int i = 0; i < entities.size(); i++) {
+        Entity entity = entities.get(i);
+        Map<String, Object> properties = new HashMap<String, Object>();
+        List<Label> labels = new ArrayList<>();
+        Label label = Label.label(labelStringMap[i]);
+        labels.add(label);
         if (entity.IsSpatial) {
           properties.put(lon_name, entity.lon);
           properties.put(lat_name, entity.lat);

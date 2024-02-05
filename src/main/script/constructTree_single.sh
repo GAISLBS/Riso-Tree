@@ -1,6 +1,6 @@
 #!/bin/bash
 # for all datasets except for real wikidata.
-#./package.sh
+./package.sh
 
 # dataset="foursquare_100"
 # dataset="Gowalla_100"

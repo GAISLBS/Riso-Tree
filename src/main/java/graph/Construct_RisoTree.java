@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
+import com.google.common.hash.BloomFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -29,6 +29,7 @@ import commons.RTreeUtility;
 import commons.ReadWriteUtil;
 import commons.RisoTreeUtil;
 import commons.Util;
+import bloomfilter.GuavaBloomFilter;
 
 /**
  * @author yuhansun Construct PN index and load it into db.
@@ -782,7 +783,6 @@ public class Construct_RisoTree {
      * Construct PN and output it to file.
      *
      * @param containIDPath
-     * @param db_path
      * @param graph_path
      * @param label_list_path
      * @param labelStringMapPath
@@ -810,8 +810,9 @@ public class Construct_RisoTree {
 
         long constructTime = 0;
         if (hop == 0) {
-            constructTime = wikiConstructPNTimeZeroHop(containIDMap, labelStringMap, label_list,
-                    PNPathAndPreffix, maxPNSize);
+            constructTime = wikiConstructPNTimeZeroHop(containIDMap, labelStringMap, PNPathAndPreffix, maxPNSize);
+//            constructTime = wikiConstructPNTimeZeroHop(containIDMap, labelStringMap, label_list,
+//                    PNPathAndPreffix, maxPNSize);
         } else if (hop > 0) {
             ArrayList<ArrayList<Integer>> graph = GraphUtil.ReadGraph(graph_path);
             Map<Long, Map<String, int[]>> sourcePN =
@@ -873,12 +874,35 @@ public class Construct_RisoTree {
      *
      * @param containIDMap
      * @param labelStringMap
-     * @param label_list
      * @param PNPathAndPreffix
      * @param maxPNSize
      * @return
      * @throws Exception
      */
+    public static long wikiConstructPNTimeZeroHop(HashMap<Long, ArrayList<Integer>> containIDMap,
+                                                  String[] labelStringMap, String PNPathAndPreffix,
+                                                  int maxPNSize) throws Exception {
+        // 1-hop
+        LOGGER.info("construct 0-hop");
+        long start = System.currentTimeMillis();
+        FileWriter writer1 = new FileWriter(new File(getPNFilePath(PNPathAndPreffix, 0)));
+        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, 0, 5)));
+        int index = 0;
+        for (long nodeId : containIDMap.keySet()) {
+            index++;
+            if (index % PNLogCount == 0) {
+                LOGGER.info("" + index);
+            }
+            writer1.write(nodeId + "\n");
+            // 0-hop path neighbors are spatial objects themselves.
+            TreeSet<Integer> pathNeighbors = new TreeSet<>(containIDMap.get(nodeId));
+            HashMap<Integer, ArrayList<Integer>> pathLabelNeighbor = dividedByLabels(pathNeighbors, labelStringMap, maxPNSize);
+            outPathLabelNeighbors(pathLabelNeighbor, PNPrefix, writer1, writer2, labelStringMap);
+        }
+        Util.close(writer1);
+        return System.currentTimeMillis() - start;
+    }
+
     public static long wikiConstructPNTimeZeroHop(HashMap<Long, ArrayList<Integer>> containIDMap,
                                                   String[] labelStringMap, ArrayList<ArrayList<Integer>> label_list, String PNPathAndPreffix,
                                                   int maxPNSize) throws Exception {
@@ -909,7 +933,6 @@ public class Construct_RisoTree {
      *
      * @param containIDMap
      * @param labelStringMap
-     * @param dbservice
      * @param graph
      * @param label_list
      * @param hop
@@ -1002,8 +1025,7 @@ public class Construct_RisoTree {
                     continue; // this PN is ignored.
                 }
                 TreeSet<Integer> nextPathNeighbors = getNextPathNeighborsInSet(curPathNeighbors, graph);
-                HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors =
-                        dividedByLabels(nextPathNeighbors, label_list, maxPNSize);
+                HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors = dividedByLabels(nextPathNeighbors, labelStringMap, maxPNSize);
                 outPathLabelNeighbors(pathLabelNeighbors, key, writer, labelStringMap);
             } else {
                 throw new Exception(String.format("key %s format wrong!", key));
@@ -1044,9 +1066,28 @@ public class Construct_RisoTree {
     private static void outPathLabelNeighbors(HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors,
                                               String key, FileWriter writer2, String[] labelStringMap) throws Exception {
         for (int pathEndLabel : pathLabelNeighbors.keySet()) {
-            String propertyName = getAttachName(key, pathEndLabel, labelStringMap);
+            String propertyName = getAttachName(key, pathEndLabel);
+//            String propertyName = getAttachName(key, pathEndLabel, labelStringMap);
             ArrayList<Integer> arrayList = pathLabelNeighbors.get(pathEndLabel);
             writer2.write(String.format("%s,%s\n", propertyName, arrayList));
+        }
+    }
+
+    private static void outPathLabelNeighbors(HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors,
+                                              String key, FileWriter writer1, FileWriter writer2, String[] labelStringMap) throws Exception {
+        for (int pathEndLabel : pathLabelNeighbors.keySet()) {
+            String propertyName = getAttachName(key, pathEndLabel);
+//            String propertyName = getAttachName(key, pathEndLabel, labelStringMap);
+            ArrayList<Integer> arrayList = pathLabelNeighbors.get(pathEndLabel);
+            writer1.write(String.format("%s,%s\n", propertyName, arrayList));
+
+            GuavaBloomFilter cbf = new GuavaBloomFilter(5, 0.01);
+            cbf.add(arrayList);
+            BloomFilter<Integer> bf = cbf.getFilter();
+            String stinrgBf = bf.toString();
+
+            int aa= 1;
+            writer2.write(String.format("%s,%s\n", propertyName, bf));  // write bloom filter
         }
     }
 
@@ -1235,6 +1276,11 @@ public class Construct_RisoTree {
         return RisoTreeUtil.getAttachName(key, labelStr);
     }
 
+    private static String getAttachName(String key, int pathEndLabel) {
+        String labelStr = String.valueOf(pathEndLabel);
+        return RisoTreeUtil.getAttachName(key, labelStr);
+    }
+
     public static HashMap<Integer, ArrayList<Integer>> dividedByLabels(
             TreeSet<Integer> nextPathNeighbors, ArrayList<ArrayList<Integer>> label_list, int maxPNSize) {
         HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors = new HashMap<Integer, ArrayList<Integer>>();
@@ -1260,6 +1306,35 @@ public class Construct_RisoTree {
                 }
 
             }
+        }
+        return pathLabelNeighbors;
+    }
+
+    public static HashMap<Integer, ArrayList<Integer>> dividedByLabels(
+            TreeSet<Integer> nextPathNeighbors, String[] label_String, int maxPNSize) {
+        HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors = new HashMap<Integer, ArrayList<Integer>>();
+        for (int neighborID : nextPathNeighbors) {
+            int label = Integer.parseInt(label_String[neighborID]);
+            if (pathLabelNeighbors.containsKey(label)) {
+                ArrayList<Integer> value = pathLabelNeighbors.get(label);
+                if (value.size() == 0) { // PN has already reached the maxPNSize
+                    continue;
+                }
+
+                if (value.size() == maxPNSize) { // PN will reach the maxPNSize after this insertion
+                    value = new ArrayList<>();
+                    pathLabelNeighbors.put(label, value);
+                    continue;
+                }
+
+                value.add(neighborID);
+            } else {
+                ArrayList<Integer> arrayList = new ArrayList<Integer>();
+                arrayList.add(neighborID);
+                pathLabelNeighbors.put(label, arrayList);
+            }
+
+
         }
         return pathLabelNeighbors;
     }
@@ -1403,6 +1478,10 @@ public class Construct_RisoTree {
 
     public static String getPNFilePath(String PNPathAndPreffix, int hop) {
         return String.format("%s_%d.txt", PNPathAndPreffix, hop);
+    }
+
+    public static String getBFFilePath(String PNPathAndPreffix, int hop, int BloomFilterSize) {
+        return String.format("%s_%d_BF_%d.txt", PNPathAndPreffix, hop, BloomFilterSize);
     }
 
     public static void wikiGenerateContainSpatialID(String db_path, String dataset,
