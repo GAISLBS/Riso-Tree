@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.util.*;
 import java.util.logging.Logger;
 
+import bloomfilter.MurmurBloomFilter;
+import bloomfilter.PrimeBloomFilter;
 import com.google.common.hash.BloomFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.neo4j.graphdb.Direction;
@@ -886,7 +888,7 @@ public class Construct_RisoTree {
         LOGGER.info("construct 0-hop");
         long start = System.currentTimeMillis();
         FileWriter writer1 = new FileWriter(new File(getPNFilePath(PNPathAndPreffix, 0)));
-        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, 0, 5)));
+        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, 0, 3)));
         int index = 0;
         for (long nodeId : containIDMap.keySet()) {
             index++;
@@ -894,6 +896,7 @@ public class Construct_RisoTree {
                 LOGGER.info("" + index);
             }
             writer1.write(nodeId + "\n");
+            writer2.write(nodeId + "\n");
             // 0-hop path neighbors are spatial objects themselves.
             TreeSet<Integer> pathNeighbors = new TreeSet<>(containIDMap.get(nodeId));
             HashMap<Integer, ArrayList<Integer>> pathLabelNeighbor = dividedByLabels(pathNeighbors, labelStringMap, maxPNSize);
@@ -1081,13 +1084,12 @@ public class Construct_RisoTree {
             ArrayList<Integer> arrayList = pathLabelNeighbors.get(pathEndLabel);
             writer1.write(String.format("%s,%s\n", propertyName, arrayList));
 
-            GuavaBloomFilter cbf = new GuavaBloomFilter(5, 0.01);
-            cbf.add(arrayList);
-            BloomFilter<Integer> bf = cbf.getFilter();
-            String stinrgBf = bf.toString();
-
-            int aa= 1;
-            writer2.write(String.format("%s,%s\n", propertyName, bf));  // write bloom filter
+            MurmurBloomFilter bf = new MurmurBloomFilter(1280, 3, 5000);
+            for (int id : arrayList) {
+                bf.add(id);
+            }
+            int[] result = bf.toIntArray();
+            writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
         }
     }
 
