@@ -793,11 +793,12 @@ public class Construct_RisoTree {
      * @param maxPNSize
      * @throws Exception
      */
-    public static void wikiConstructPNSingleHopNoGraphDb(String containIDPath, String graph_path,
+    public static void wikiConstructPNSingleHopNoGraphDb(String containIDPath, String graph_path, String in_graph_path,
                                                          String label_list_path, String labelStringMapPath, int hop, String PNPathAndPreffix,
                                                          int maxPNSize) throws Exception {
         Util.checkPathExist(containIDPath);
         Util.checkPathExist(graph_path);
+        Util.checkPathExist(in_graph_path);
         Util.checkPathExist(label_list_path);
         Util.checkPathExist(labelStringMapPath);
         if (hop > 0) {
@@ -817,10 +818,11 @@ public class Construct_RisoTree {
 //                    PNPathAndPreffix, maxPNSize);
         } else if (hop > 0) {
             ArrayList<ArrayList<Integer>> graph = GraphUtil.ReadGraph(graph_path);
+            ArrayList<ArrayList<Integer>> ingoing_graph = GraphUtil.ReadGraph(in_graph_path);
             Map<Long, Map<String, int[]>> sourcePN =
                     ReadWriteUtil.readLeafNodesPathNeighbors(getPNFilePath(PNPathAndPreffix, hop - 1));
-            constructTime = wikiConstructPNTimeMultiHopNoGraphDb(containIDMap, labelStringMap, graph,
-                    label_list, hop, PNPathAndPreffix, maxPNSize, sourcePN);
+            constructTime = constructPNTimeMultiHopNoGraphDb(containIDMap, labelStringMap, graph, ingoing_graph,
+                    hop, PNPathAndPreffix, maxPNSize, sourcePN);
         } else {
             throw new Exception(String.format("hop = %d is invalid!", hop));
         }
@@ -903,6 +905,7 @@ public class Construct_RisoTree {
             outPathLabelNeighbors(pathLabelNeighbor, PNPrefix, writer1, writer2, labelStringMap);
         }
         Util.close(writer1);
+        Util.close(writer2);
         return System.currentTimeMillis() - start;
     }
 
@@ -976,6 +979,53 @@ public class Construct_RisoTree {
     }
 
     /**
+     * Construct PN (hop > 0), PN whose size exceeds {@code maxPNSize} will be set as []. Without
+     * accessing Graph Db. Need to use the hop-1 PathNeighbor file.
+     *
+     * @param containIDMap
+     * @param labelStringMap
+     * @param graph
+     * @param hop
+     * @param PNPathAndPreffix
+     * @param maxPNSize
+     * @return
+     * @throws Exception
+     */
+    private static long constructPNTimeMultiHopNoGraphDb(
+            HashMap<Long, ArrayList<Integer>> containIDMap, String[] labelStringMap,
+            ArrayList<ArrayList<Integer>> graph, ArrayList<ArrayList<Integer>> ingoing_graph,  int hop,
+            String PNPathAndPreffix, int maxPNSize, Map<Long, Map<String, int[]>> leafNodesPN)
+            throws Exception {
+        // more than one hop
+        LOGGER.info(String.format("construct %d hop", hop));
+        FileWriter writer1 = new FileWriter(new File(getPNFilePath(PNPathAndPreffix, hop)));
+        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, hop, 3)));
+
+        int index = 0;
+        long start = System.currentTimeMillis();
+        for (long nodeID : containIDMap.keySet()) {
+            index++;
+            if (index % PNLogCount == 0) {
+                LOGGER.info("" + index);
+            }
+
+            Map<String, int[]> nodePN = leafNodesPN.get(nodeID);
+            if (nodePN == null) {
+                throw new RuntimeException(
+                        String.format("leaf node %d does not exist leafNodesPN!", nodeID));
+            }
+
+            writer1.write(nodeID + "\n");
+            writer2.write(nodeID + "\n");
+            constructPNOutputForNodeNoGraphDbInOut(nodePN, labelStringMap, graph, ingoing_graph, hop, writer1, writer2,
+                    maxPNSize);
+        }
+        Util.close(writer1);
+        Util.close(writer2);
+        return System.currentTimeMillis() - start;
+    }
+
+    /**
      * Construct PN (hop > 0), PN whose size exceeds {@code maxPNSize} will be set as [].
      *
      * @param containIDMap
@@ -1036,6 +1086,27 @@ public class Construct_RisoTree {
         }
     }
 
+    private static void constructPNOutputForNodeNoGraphDbInOut(Map<String, int[]> nodePN,
+                                                          String[] labelStringMap, ArrayList<ArrayList<Integer>> graph,
+                                                          ArrayList<ArrayList<Integer>> ingoing_graph, int hop, FileWriter writer1, FileWriter writer2, int maxPNSize)
+            throws Exception {
+        for (String key : nodePN.keySet()) {
+            if (RisoTreeUtil.isPNProperty(key) && RisoTreeUtil.getHopNumber(key) == (hop - 1)) {
+                int[] curPathNeighbors = nodePN.get(key);
+                if (curPathNeighbors.length == 0) {
+                    continue; // this PN is ignored.
+                }
+                TreeSet<Integer> nextPathNeighbors = getNextPathNeighborsInSet(curPathNeighbors, graph);
+                TreeSet<Integer> prePathNeighbors = getNextPathNeighborsInSet(curPathNeighbors, ingoing_graph);
+                HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors = dividedByLabels(nextPathNeighbors, labelStringMap, maxPNSize);
+                HashMap<Integer, ArrayList<Integer>> pathLabelInNeighbors = dividedByLabels(prePathNeighbors, labelStringMap, maxPNSize);
+                InoutPathLabelNeighbors(pathLabelNeighbors, pathLabelInNeighbors, key, writer1, writer2);
+            } else {
+                throw new Exception(String.format("key %s format wrong!", key));
+            }
+        }
+    }
+
     /**
      * Construct the PN for a given hop and leaf node.
      *
@@ -1090,6 +1161,28 @@ public class Construct_RisoTree {
             }
             int[] result = bf.toIntArray();
             writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
+        }
+    }
+
+    private static void InoutPathLabelNeighbors(HashMap<Integer, ArrayList<Integer>> pathLabelNeighbors, HashMap<Integer, ArrayList<Integer>> pathLabelInNeighbors,
+                                              String key, FileWriter writer1, FileWriter writer2) throws Exception {
+        for (int pathEndLabel : pathLabelNeighbors.keySet()) {
+            String propertyName = getAttachName(key, pathEndLabel);
+            ArrayList<Integer> arrayList = pathLabelNeighbors.get(pathEndLabel);
+            writer1.write(String.format("%s,%s\n", propertyName, arrayList));
+
+            MurmurBloomFilter bf = new MurmurBloomFilter(320, 3, 5000);
+            for (int id : arrayList) {
+                bf.add(id);
+            }
+
+            ArrayList<Integer> inArrayList = pathLabelInNeighbors.get(pathEndLabel);
+            for (int id : inArrayList) {
+                bf.add(id);
+            }
+            int[] result = bf.toIntArray();
+            writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
+//            writer2.write(String.format("%s,%s\n", propertyName, Arrays.toString(result)));
         }
     }
 

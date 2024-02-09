@@ -99,6 +99,7 @@ public class Driver {
   private static final String help = "h";
   private static final String function = "f";
   private static final String graphPath = "gp";
+  private static final String inGraphPath = "igp";
   private static final String entityPath = "ep";
   private static final String labelListPath = "lp";
   private static final String dbPath = "dp";
@@ -398,7 +399,7 @@ public class Driver {
             break;
           case wikiConstructPNTimeSingleHopNoGraphDb:
             Construct_RisoTree.wikiConstructPNSingleHopNoGraphDb(cmd.getOptionValue(containIDPath),
-                cmd.getOptionValue(graphPath), cmd.getOptionValue(labelListPath),
+                cmd.getOptionValue(graphPath), cmd.getOptionValue(inGraphPath), cmd.getOptionValue(labelListPath),
                 cmd.getOptionValue(labelStrMapPath), Integer.parseInt(cmd.getOptionValue(hop)),
                 cmd.getOptionValue(PNPathAndPrefix),
                 Integer.parseInt(cmd.getOptionValue(maxPNSize)));

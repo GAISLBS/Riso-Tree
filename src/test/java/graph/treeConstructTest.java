@@ -14,6 +14,7 @@ public class treeConstructTest {
     static String data_dir = dir + "/data/" + dataset;
     static String db_path = data_dir + "/neo4j-community-3.4.12_Gleenes_1.0_-1_new_version/data/databases/graph.db";
     static String graph_path = data_dir + "/graph.txt";
+    static String in_graph_path = data_dir + "/ingoing_graph.txt";
     static String entity_path = data_dir + "/entity.txt";
     static String graph_label_path = data_dir + "/graph_label.txt";
     static String entity_label_path = data_dir + "/entity_string_label.txt";
@@ -83,7 +84,7 @@ public class treeConstructTest {
         String PNPath = data_dir + "/PathNeighbors_" + "Gleenes_1.0_-1_new_version";
         try {
             for (int hop = 0; hop < 3; hop++) {
-                wikiConstructPNSingleHopNoGraphDb(containSpatialIDPath, graph_path, graph_label_path, entity_label_path, hop, PNPath, -1);
+                wikiConstructPNSingleHopNoGraphDb(containSpatialIDPath, graph_path, in_graph_path, graph_label_path, entity_label_path, hop, PNPath, -1);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

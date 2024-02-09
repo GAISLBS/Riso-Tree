@@ -12,7 +12,7 @@ public class MurmurBloomFilter {
     /**
      * Constructor for PrimeBloomFilter
      *
-     * @param bfSize      size of the bloom filter bitmap
+     * @param bfSize    size of the bloom filter bitmap
      * @param numOfHash number of hash functions
      */
     public MurmurBloomFilter(int bfSize, int numOfHash, int seed) {
@@ -72,7 +72,8 @@ public class MurmurBloomFilter {
         return BitSet.valueOf(bytes);
     }
 
-    public double getFpp() {
-        return Math.pow(1 - Math.exp(-1.0 * numOfHash * elementsCount / bfSize), numOfHash);
+    public String getFpp() {
+        double result = Math.pow(1 - Math.exp(-1.0 * numOfHash * elementsCount / bfSize), numOfHash);
+        return String.format("%.4f", result);
     }
 }
