@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import static dataprocess.Wikidata.generateZeroOneHopPNForSpatialNodes;
 import static dataprocess.Wikidata.loadAllEntities;
-import static graph.Construct_RisoTree.wikiConstructPNSingleHopNoGraphDb;
-import static graph.Construct_RisoTree.wikiGenerateContainSpatialID;
+import static graph.Construct_RisoTree.*;
 
 public class treeConstructTest {
     static String dir = "D:/gspatial_test/Riso-Tree";
@@ -20,6 +19,7 @@ public class treeConstructTest {
     static String entity_label_path = data_dir + "/entity_string_label.txt";
     static String spatialNodePNPath = data_dir + "/spatialNodesZeroOneHopPN_-1.txt";
     static String containSpatialIDPath = data_dir + "/containID_Gleenes_1.0_-1_new_version.txt";
+    static String PNPath = data_dir + "/PathNeighbors_Gleenes_1.0_-1_new_version";
 
     /**
      * Construct PathNeighbors for spatial nodes.
@@ -86,6 +86,15 @@ public class treeConstructTest {
             for (int hop = 0; hop < 3; hop++) {
                 wikiConstructPNSingleHopNoGraphDb(containSpatialIDPath, graph_path, in_graph_path, graph_label_path, entity_label_path, hop, PNPath, -1);
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void testWikiLoadAllHopPN(){
+        try {
+            wikiLoadAllHopPN(PNPath,"0,1,2", db_path, containSpatialIDPath);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

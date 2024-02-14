@@ -890,7 +890,7 @@ public class Construct_RisoTree {
         LOGGER.info("construct 0-hop");
         long start = System.currentTimeMillis();
         FileWriter writer1 = new FileWriter(new File(getPNFilePath(PNPathAndPreffix, 0)));
-        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, 0, 3)));
+        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, 0, 0.05)));
         int index = 0;
         for (long nodeId : containIDMap.keySet()) {
             index++;
@@ -999,7 +999,7 @@ public class Construct_RisoTree {
         // more than one hop
         LOGGER.info(String.format("construct %d hop", hop));
         FileWriter writer1 = new FileWriter(new File(getPNFilePath(PNPathAndPreffix, hop)));
-        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, hop, 3)));
+        FileWriter writer2 = new FileWriter(new File(getBFFilePath(PNPathAndPreffix, hop, 0.05)));
 
         int index = 0;
         long start = System.currentTimeMillis();
@@ -1155,12 +1155,13 @@ public class Construct_RisoTree {
             ArrayList<Integer> arrayList = pathLabelNeighbors.get(pathEndLabel);
             writer1.write(String.format("%s,%s\n", propertyName, arrayList));
 
-            MurmurBloomFilter bf = new MurmurBloomFilter(1280, 3, 5000);
+            MurmurBloomFilter bf = new MurmurBloomFilter(arrayList.size(), 0.05, 5000, 3);
             for (int id : arrayList) {
                 bf.add(id);
             }
             int[] result = bf.toIntArray();
-            writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
+//            writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
+            writer2.write(String.format("%s,%s\n", propertyName, Arrays.toString(result)));
         }
     }
 
@@ -1169,20 +1170,21 @@ public class Construct_RisoTree {
         for (int pathEndLabel : pathLabelNeighbors.keySet()) {
             String propertyName = getAttachName(key, pathEndLabel);
             ArrayList<Integer> arrayList = pathLabelNeighbors.get(pathEndLabel);
+            ArrayList<Integer> inArrayList = pathLabelInNeighbors.get(pathEndLabel);
+            int elementCount = arrayList.size() + inArrayList.size();
             writer1.write(String.format("%s,%s\n", propertyName, arrayList));
 
-            MurmurBloomFilter bf = new MurmurBloomFilter(320, 3, 5000);
+            MurmurBloomFilter bf = new MurmurBloomFilter(elementCount, 0.05, 5000, 3);
             for (int id : arrayList) {
                 bf.add(id);
             }
 
-            ArrayList<Integer> inArrayList = pathLabelInNeighbors.get(pathEndLabel);
             for (int id : inArrayList) {
                 bf.add(id);
             }
             int[] result = bf.toIntArray();
-            writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
-//            writer2.write(String.format("%s,%s\n", propertyName, Arrays.toString(result)));
+//            writer2.write(String.format("%s,%s,%s\n", propertyName, Arrays.toString(result), bf.getFpp()));
+            writer2.write(String.format("%s,%s\n", propertyName, Arrays.toString(result)));
         }
     }
 
@@ -1577,6 +1579,10 @@ public class Construct_RisoTree {
 
     public static String getBFFilePath(String PNPathAndPreffix, int hop, int BloomFilterSize) {
         return String.format("%s_%d_BF_%d.txt", PNPathAndPreffix, hop, BloomFilterSize);
+    }
+
+    public static String getBFFilePath(String PNPathAndPreffix, int hop, double FalsePositive) {
+        return String.format("%s_%d_BF_%.2f.txt", PNPathAndPreffix, hop, FalsePositive);
     }
 
     public static void wikiGenerateContainSpatialID(String db_path, String dataset,
