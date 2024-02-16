@@ -17,6 +17,7 @@ public class treeConstructTest {
     static String entity_path = data_dir + "/entity.txt";
     static String graph_label_path = data_dir + "/graph_label.txt";
     static String entity_label_path = data_dir + "/entity_string_label.txt";
+    static String label_path = data_dir + "/label.txt";
     static String spatialNodePNPath = data_dir + "/spatialNodesZeroOneHopPN_-1.txt";
     static String containSpatialIDPath = data_dir + "/containID_Gleenes_1.0_-1_new_version.txt";
     static String PNPath = data_dir + "/PathNeighbors_Gleenes_1.0_-1_new_version";
@@ -98,6 +99,11 @@ public class treeConstructTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void testConstructNL(){
+        ConstructNL(graph_path, db_path, label_path, dataset);
     }
 
 //    @Test

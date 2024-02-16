@@ -17,7 +17,8 @@ public class queryTest {
     static String entity_label_path = data_dir + "/entity_string_label.txt";
     static String password = "0000";
     static String db_path_format = data_dir + "/neo4j-community-3.4.12_Gleenes_1.0_%s_new_version/data/databases/graph.db";
-    static String db_path = String.format(db_path_format, "10") + "," + String.format(db_path_format, "40") + "," + String.format(db_path_format, "160") + "," + String.format(db_path_format, "640") + "," + String.format(db_path_format, "-1");
+//    static String db_path = String.format(db_path_format, "10") + "," + String.format(db_path_format, "40") + "," + String.format(db_path_format, "160") + "," + String.format(db_path_format, "640") + "," + String.format(db_path_format, "-1");
+    static String db_path = String.format(db_path_format, "-1");
     static String query_dir = dir + "/data/result/query/" + dataset + "/";
     static String node_count = "6";
     static String selectivity = "0.001";
@@ -30,7 +31,7 @@ public class queryTest {
     @Test
     public void testGenerateQuery(){
         try {
-            generateExperimentCypherQuery(graph_path, entity_path, graph_label_path, entity_label_path, selectivity_str_list, Integer.parseInt(node_count), query_count, query_dir);
+            generateExperimentCypherQuery(graph_path, entity_path, graph_label_path, entity_label_path, selectivity_str_list, query_count, Integer.parseInt(node_count), query_dir);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

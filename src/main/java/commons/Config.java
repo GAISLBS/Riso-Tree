@@ -9,10 +9,10 @@ public class Config {
 
   public static String longitude_property_name = "longitude";
   public static String latitude_property_name = "latitude";
-  public static final String password = "syh19910205";
+  public static final String password = "0000";
 
   // attention here, these settings change a lot
-  private String neo4j_version = "neo4j-community-3.4.12";
+  private String neo4j_version = "neo4j-community-3.4.12_Gleenes_1.0_-1_new_version";
   private Enums.system operatingSystem = Enums.system.Windows;
   private String dataset = Enums.Datasets.Yelp.name();
 
