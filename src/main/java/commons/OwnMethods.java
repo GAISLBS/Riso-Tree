@@ -591,6 +591,8 @@ public class OwnMethods {
    * @param entities
    * @param node_count size of the generated graph
    * @param labelStringMap number of spatial predicates
+   * @param queryRect random query rectangle
+   * @param startSpatialId a spatial node id satisfying query rectangle
    * @return
    * @throws Exception
    */
@@ -663,10 +665,11 @@ public class OwnMethods {
     query_Graph.spa_predicate[0] = queryRect;
     for (int i = 0; i < node_count; i++) {
       int id = subgraph_ids.get(i);
-      // set random label for each query node
-      ArrayList<Integer> singleNodeLabels = labels.get(id);
-      int label = singleNodeLabels.get(random.nextInt(singleNodeLabels.size()));
-      query_Graph.label_list_string[i] = labelStringMap[label];
+      // set random label for each query node : why random? it makes do not work Query in Neo4j
+//      ArrayList<Integer> singleNodeLabels = labels.get(id);
+//      int label = singleNodeLabels.get(random.nextInt(singleNodeLabels.size()));
+//      query_Graph.label_list_string[i] = labelStringMap[label];
+      query_Graph.label_list_string[i] = labelStringMap[id];
       ArrayList<Integer> neighbors = subgraph.get(i);
       // convert the graph_id in the subgraph to the query graph
       for (int neighbor : neighbors) {

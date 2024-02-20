@@ -38,7 +38,7 @@ public class queryTest {
     }
 
     @Test
-    public void testBatchRTreeInsertOneHopAware() throws Exception {
+    public void testRangeQuery() throws Exception {
         maxPNSizeRisoTreeQueryMultiple(db_path, dataset, 2, query_path, query_count, password, clear_cache, clear_cache_method, output_path);
     }
 }

@@ -585,7 +585,7 @@ public class Prepare {
       if (queries == null) {
         continue;
       }
-      String outputPath = String.format("%s/%d_%s", outputDir, nodeCount, selectivity);
+      String outputPath = String.format("%s/%d_%s.txt", outputDir, nodeCount, selectivity);
       ReadWriteUtil.WriteFile(outputPath, true, queries);
     }
   }
