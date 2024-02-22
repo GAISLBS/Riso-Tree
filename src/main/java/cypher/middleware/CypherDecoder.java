@@ -198,8 +198,7 @@ public class CypherDecoder {
     String[] labelList = getQueryLabelList(nodeVariableIdMap, nodeStrings);
     Result result = service.execute("explain " + query);
     ExecutionPlanDescription planDescription = result.getExecutionPlanDescription();
-    List<ExecutionPlanDescription> plans =
-        ExecutionPlanDescriptionUtil.getRequired(planDescription);
+    List<ExecutionPlanDescription> plans = ExecutionPlanDescriptionUtil.getRequired(planDescription);
     ArrayList<ArrayList<Integer>> graphStructure = getGraphStructure(plans, nodeVariableIdMap);
 
     Query_Graph query_Graph = new Query_Graph(nodeVariableIdMap.size(), LabelType.STRING);
@@ -287,8 +286,7 @@ public class CypherDecoder {
       treeGraph.add(new TreeSet<>());
     }
     for (ExecutionPlanDescription planDescription : plans) {
-      String[] edge =
-          ExecutionPlanDescriptionUtil.getEdgeInExpandExpressionPlanNode(planDescription);
+      String[] edge = ExecutionPlanDescriptionUtil.getEdgeInExpandExpressionPlanNode(planDescription);
       int id1 = nodeVariableIdMap.get(edge[0]);
       int id2 = nodeVariableIdMap.get(edge[1]);
       treeGraph.get(id1).add(id2);

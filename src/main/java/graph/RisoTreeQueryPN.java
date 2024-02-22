@@ -1072,8 +1072,7 @@ public class RisoTreeQueryPN {
       Node root_node = RTreeUtility.getRTreeRoot(dbservice, dataset);
 
       // long start = System.currentTimeMillis();
-      Map<Integer, List<Node>> overlapLeafNodes =
-          getOverlapLeafNodes(root_node, spa_predicates, PN_list_propertyname);
+      Map<Integer, List<Node>> overlapLeafNodes = getOverlapLeafNodes(root_node, spa_predicates, PN_list_propertyname);
       // range_query_time += System.currentTimeMillis() - start;
       if (overlapLeafNodes == null) {
         Util.println("No result satisfy the query.");
@@ -1460,8 +1459,7 @@ public class RisoTreeQueryPN {
           overlap_MBR_list.add(node);
           // record the next level tree nodes
           long start = System.currentTimeMillis();
-          Iterable<Relationship> rels =
-              node.getRelationships(RTreeRel.RTREE_CHILD, Direction.OUTGOING);
+          Iterable<Relationship> rels = node.getRelationships(RTreeRel.RTREE_CHILD, Direction.OUTGOING);
           for (Relationship relationship : rels) {
             next_list.add(relationship.getEndNode());
           }
